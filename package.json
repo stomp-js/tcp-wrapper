@@ -1,0 +1,27 @@
+{
+  "name": "@stomp/tcp-wrapper",
+  "version": "1.0.0",
+  "description": "TCP wrapper for NodeJS sockets to use STOMP over TCP with @stomp/stompjs and @stomp/rx-stomp",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "STOMP",
+    "stompjs",
+    "rx-stomp",
+    "TCP",
+    "RabbitMQ",
+    "ActiveMQ"
+  ],
+  "author": "deepak@kreatio.com",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "prettier": "^2.8.3",
+    "rollup": "^3.10.1",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "@stomp/stompjs": "^6.1.2"
+  }
+}
