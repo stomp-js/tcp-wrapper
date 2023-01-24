@@ -2,9 +2,11 @@
   "name": "@stomp/tcp-wrapper",
   "version": "1.0.0",
   "description": "TCP wrapper for NodeJS sockets to use STOMP over TCP with @stomp/stompjs and @stomp/rx-stomp",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "rm -rf bundles esm6",
+    "rollup": "rollup -c",
+    "build": "npm run clean && npx tsc && npm run rollup",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "STOMP",
@@ -17,11 +19,21 @@
   "author": "deepak@kreatio.com",
   "license": "Apache-2.0",
   "devDependencies": {
+    "@rollup/plugin-typescript": "^11.0.0",
+    "@types/node": "^18.11.18",
     "prettier": "^2.8.3",
     "rollup": "^3.10.1",
+    "tslib": "^2.4.1",
     "typescript": "^4.9.4"
   },
   "dependencies": {
-    "@stomp/stompjs": "^6.1.2"
-  }
+    "@stomp/stompjs": "file:../stompjs/stomp-stompjs-7.0.0-beta3.tgz"
+  },
+  "type": "module",
+  "exports": {
+    "import": "./esm6/index.js",
+    "require": "./bundles/tcp-wrapper.cjs"
+  },
+  "typings": "./esm6/index.d.ts",
+  "sideEffects": false
 }
