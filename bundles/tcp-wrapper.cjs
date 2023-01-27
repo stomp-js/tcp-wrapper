@@ -1,7 +1,26 @@
 'use strict';
 
 var net = require('net');
-var stompjs = require('@stomp/stompjs');
+
+/**
+ * Possible states for the IStompSocket
+ */
+var StompSocketState;
+(function (StompSocketState) {
+    StompSocketState[StompSocketState["CONNECTING"] = 0] = "CONNECTING";
+    StompSocketState[StompSocketState["OPEN"] = 1] = "OPEN";
+    StompSocketState[StompSocketState["CLOSING"] = 2] = "CLOSING";
+    StompSocketState[StompSocketState["CLOSED"] = 3] = "CLOSED";
+})(StompSocketState = StompSocketState || (StompSocketState = {}));
+/**
+ * Possible activation state
+ */
+var ActivationState;
+(function (ActivationState) {
+    ActivationState[ActivationState["ACTIVE"] = 0] = "ACTIVE";
+    ActivationState[ActivationState["DEACTIVATING"] = 1] = "DEACTIVATING";
+    ActivationState[ActivationState["INACTIVE"] = 2] = "INACTIVE";
+})(ActivationState = ActivationState || (ActivationState = {}));
 
 /**
  * Wrapper for a TCP socket to make it behave similar to the WebSocket interface
@@ -21,17 +40,17 @@ class TCPWrapper {
         this.onmessage = noOp;
         this.onopen = noOp;
         this.url = `tcp://${host}/${port}/`;
-        this.readyState = stompjs.StompSocketState.CONNECTING;
+        this.readyState = StompSocketState.CONNECTING;
         this.socket = this.getSocket(port, host);
         this.socket.on('connect', () => {
-            this.readyState = stompjs.StompSocketState.OPEN;
+            this.readyState = StompSocketState.OPEN;
             this.onopen();
         });
         this.socket.on('data', ev => {
             this.onmessage({ data: ev });
         });
         this.socket.on('close', hadError => {
-            this.readyState = stompjs.StompSocketState.CLOSED;
+            this.readyState = StompSocketState.CLOSED;
             if (this._closeEvtOnTermination) {
                 this.onclose(this._closeEvtOnTermination);
             }
@@ -72,14 +91,14 @@ class TCPWrapper {
      * @param reason
      */
     close(code, reason) {
-        this.readyState = stompjs.StompSocketState.CLOSING;
+        this.readyState = StompSocketState.CLOSING;
         this.socket.end();
     }
     /**
      * @internal
      */
     terminate() {
-        this.readyState = stompjs.StompSocketState.CLOSING;
+        this.readyState = StompSocketState.CLOSING;
         this._closeEvtOnTermination = {
             wasClean: false,
             type: 'CloseEvent',
