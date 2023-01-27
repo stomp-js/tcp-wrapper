@@ -1,6 +1,6 @@
 {
   "name": "@stomp/tcp-wrapper",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "TCP wrapper for NodeJS sockets to use STOMP over TCP with @stomp/stompjs and @stomp/rx-stomp",
   "scripts": {
     "clean": "rm -rf bundles esm6",

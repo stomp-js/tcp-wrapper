@@ -17,6 +17,8 @@ These instructions will get you a copy of the project up and running on your loc
 $ npm i @stomp/tcp-wrapper
 ```
 
+In addition, you must install one of [@stomp/rx-stomp] or [@stomp/stompjs].
+
 ### Usage
 
 #### With [@stomp/rx-stomp]
