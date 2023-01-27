@@ -27,10 +27,11 @@ import { RxStomp } from '@stomp/rx-stomp';
 
 const rxStomp = new RxStomp();
 rxStomp.configure({
+  // hostname (or ip addess) and port number of the STOMP broker
+  webSocketFactory: () => new TCPWrapper('127.0.0.1', 61613),
   heartbeatOutgoing: 20000,
   heartbeatIncoming: 20000,
   debug: console.log,
-  webSocketFactory: () => new TCPWrapper('127.0.0.1', 61613),
 });
 
 const subscription = rxStomp
@@ -57,6 +58,8 @@ import { Client } from '@stomp/stompjs';
 import { TCPWrapper } from '@stomp/tcp-wrapper';
 
 const client = new Client({
+  // hostname (or ip addess) and port number of the STOMP broker
+  webSocketFactory: () => new TCPWrapper('127.0.0.1', 61613),
   heartbeatOutgoing: 20000,
   heartbeatIncoming: 20000,
   debug: console.log,
@@ -66,7 +69,6 @@ const client = new Client({
     );
     client.publish({ destination: '/topic/test01', body: 'First Message' });
   },
-  webSocketFactory: () => new TCPWrapper('127.0.0.1', 61613),
 });
 
 client.activate();
