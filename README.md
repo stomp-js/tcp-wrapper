@@ -13,6 +13,67 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Installing
 
+```bash
+$ npm i @stomp/tcp-wrapper
+```
+
+### Usage
+
+#### With [@stomp/rx-stomp]
+
+```javascript
+import { TCPWrapper } from '@stomp/tcp-wrapper';
+import { RxStomp } from '@stomp/rx-stomp';
+
+const rxStomp = new RxStomp();
+rxStomp.configure({
+  heartbeatOutgoing: 20000,
+  heartbeatIncoming: 20000,
+  debug: console.log,
+  webSocketFactory: () => new TCPWrapper('127.0.0.1', 61613),
+});
+
+const subscription = rxStomp
+  .watch({ destination: '/topic/test-rx' })
+  .subscribe(message => console.log(message.body));
+
+rxStomp.activate();
+
+rxStomp.publish({
+  destination: '/topic/test-rx',
+  body: 'First message to RxStomp',
+});
+
+setTimeout(async () => {
+  subscription.unsubscribe();
+  await rxStomp.deactivate();
+}, 3000);
+```
+
+#### With [@stomp/stompjs]
+
+```javascript
+import { Client } from '@stomp/stompjs';
+import { TCPWrapper } from '@stomp/tcp-wrapper';
+
+const client = new Client({
+  heartbeatOutgoing: 20000,
+  heartbeatIncoming: 20000,
+  debug: console.log,
+  onConnect: () => {
+    client.subscribe('/topic/test01', message =>
+      console.log(`Received: ${message.binaryBody}`)
+    );
+    client.publish({ destination: '/topic/test01', body: 'First Message' });
+  },
+  webSocketFactory: () => new TCPWrapper('127.0.0.1', 61613),
+});
+
+client.activate();
+
+setTimeout(() => client.deactivate(), 3000);
+```
+
 ## Contributing
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
@@ -25,11 +86,9 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 - [Deepak Kumar](https://github.com/kum-deepak)
 
-
 ## License
 
 This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
-
 
 [@stomp/stompjs]: https://github.com/stomp-js/stompjs
 [@stomp/rx-stomp]: https://github.com/stomp-js/rx-stomp
